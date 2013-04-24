@@ -10,12 +10,50 @@
 #import "PlayVideo_VC.h"
 #import "Reachability.h"
 
+NSString *kSettingKey = @"autoloadplaylist";
+
 @interface List_TVC ()
 @end
 
 @implementation List_TVC
 
 @synthesize listDict;
+
+
+- (BOOL)getSettingPref {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSData *testValue = [defaults dataForKey:kSettingKey]; // setting exists?
+	if (testValue == nil) {
+		NSString *pathStr = [[NSBundle mainBundle] bundlePath];
+		NSString *settingsBundlePath = [pathStr stringByAppendingPathComponent:@"Settings.bundle"];
+		NSString *finalPath = [settingsBundlePath stringByAppendingPathComponent:@"Root.plist"];
+		NSDictionary *settingsDict = [NSDictionary dictionaryWithContentsOfFile:finalPath];
+        
+		NSArray *prefSpecifierArray = [settingsDict objectForKey:@"PreferenceSpecifiers"];
+		NSNumber *settingDefault = nil;
+		NSDictionary *prefItem;
+		
+		for (prefItem in prefSpecifierArray) {
+			NSString *keyValueStr = [prefItem objectForKey:@"Key"];
+			id defaultValue = [prefItem objectForKey:@"DefaultValue"];
+			
+			if ([keyValueStr isEqualToString:kSettingKey]) {
+				settingDefault = defaultValue;
+			}
+		}
+		
+		if (settingDefault != nil) {
+			NSDictionary *appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         settingDefault, kSettingKey, nil];
+			[defaults registerDefaults:appDefaults];
+			[defaults synchronize];
+		}
+        
+    }
+	return [defaults boolForKey:kSettingKey];
+}
+
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -40,7 +78,10 @@
 //    NSLog(@"list:%@,\n-----\nlistDict:%@", list, listDict);
     
     self.title = [list objectForKey:@"playList_name"];
-    [self btnRefresh:nil];
+
+    if ([self getSettingPref]) {
+        [self btnRefresh:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning

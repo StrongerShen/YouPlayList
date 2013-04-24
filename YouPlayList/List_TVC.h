@@ -19,5 +19,6 @@
 @property (strong, nonatomic) NSDictionary *listDict;
 
 - (IBAction)btnRefresh:(id)sender;
+- (BOOL)getSettingPref;
 
 @end

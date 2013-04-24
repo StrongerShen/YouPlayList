@@ -22,6 +22,7 @@
 		660938D116F9E1E700D8CF6A /* PlayVideo_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = 660938D016F9E1E700D8CF6A /* PlayVideo_VC.m */; };
 		66250A2816FD776800976BB9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66250A2716FD776800976BB9 /* SystemConfiguration.framework */; };
 		66944AA516FD74180017A08F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 66944AA416FD74180017A08F /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66BAC22D172779FD005FDB9E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66BAC22C172779FD005FDB9E /* Settings.bundle */; };
 		66C4CCF016FE097900788221 /* PlayLists_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4CCEF16FE097900788221 /* PlayLists_TVC.m */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		66250A2716FD776800976BB9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		66944AA316FD74180017A08F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		66944AA416FD74180017A08F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		66BAC22C172779FD005FDB9E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = YouPlayList/Settings.bundle; sourceTree = "<group>"; };
 		66C4CCEE16FE097900788221 /* PlayLists_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayLists_TVC.h; sourceTree = "<group>"; };
 		66C4CCEF16FE097900788221 /* PlayLists_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayLists_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,6 +73,7 @@
 		6609389D16F9D5F300D8CF6A = {
 			isa = PBXGroup;
 			children = (
+				66BAC22C172779FD005FDB9E /* Settings.bundle */,
 				66944AA316FD74180017A08F /* Reachability.h */,
 				66944AA416FD74180017A08F /* Reachability.m */,
 				660938AF16F9D5F300D8CF6A /* YouPlayList */,
@@ -187,6 +190,7 @@
 				660938BE16F9D5F300D8CF6A /* Default@2x.png in Resources */,
 				660938C016F9D5F300D8CF6A /* Default-568h@2x.png in Resources */,
 				660938C316F9D5F300D8CF6A /* MainStoryboard.storyboard in Resources */,
+				66BAC22D172779FD005FDB9E /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
