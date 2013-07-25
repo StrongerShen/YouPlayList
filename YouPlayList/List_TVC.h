@@ -11,7 +11,7 @@
 @interface List_TVC : UITableViewController
 {
     NSMutableArray *lists;
-    NSMutableArray *entries;
+//    NSMutableArray *entries;
     
     NSDictionary *list;
 }

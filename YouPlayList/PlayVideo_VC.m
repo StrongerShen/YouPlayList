@@ -55,7 +55,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    [self embedYouTube:self.href frame:CGRectMake(20, 20, 100, 100)];
+    [self embedYouTube:self.href frame:CGRectMake(20, 20, 280, 280)];
 
 }
 

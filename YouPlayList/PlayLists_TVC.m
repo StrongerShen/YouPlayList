@@ -15,6 +15,39 @@
 
 @implementation PlayLists_TVC
 
+-(NSMutableArray *)getPlayListsByID
+{
+    NSString *userID = @"binmusictaipei";
+//    NSString *userID = @"warnertaiwan";
+    
+    NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    NSString *urlList = [NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/users/%@/playlists?v=2&alt=json", userID ];
+    
+    NSURL *url = [NSURL URLWithString:urlList];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+    NSError *jsonError = nil;
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+    
+    NSDictionary *jsonDictionary = (NSDictionary *)jsonObject;
+    
+    
+    NSMutableArray *entry = [[jsonDictionary objectForKey:@"feed"] objectForKey:@"entry"];
+    
+    for (NSDictionary *dict in entry) {
+        NSString *playlistId = [[dict objectForKey:@"yt$playlistId"] objectForKey:@"$t"];
+        NSString *title = [[dict objectForKey:@"title"] objectForKey:@"$t"];
+        
+        [items addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                          playlistId, @"playList_id",
+                          title, @"playList_name",
+                          nil]];
+    }
+    
+    return items;
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -34,8 +67,11 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.title = @"My Play Lists";
+    self.title = @"相信音樂官方頻道播放清單";
     
+    // 可以從這裡取得 userid 的 playlist
+    //http://gdata.youtube.com/feeds/api/users/binmusictaipei/playlists?v=2&alt=json
+    /*
     playLists = [NSMutableArray arrayWithObjects:
                  [NSMutableDictionary dictionaryWithObjectsAndKeys:
                   @"PL32AD21DDA508E875", @"playList_id",
@@ -58,6 +94,9 @@
                   @"蘇慧倫 20100618 Legacy+", @"playList_name",
                   nil],
                  nil];
+     */
+    
+    playLists = [self getPlayListsByID];
 }
 
 - (void)didReceiveMemoryWarning
@@ -146,8 +185,10 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
+    
     List_TVC *list_tvc = segue.destinationViewController;
-    list_tvc.listDict = [playLists objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+    list_tvc.listDict = [playLists objectAtIndex:indexPath.row];
 }
 
 @end
