@@ -128,14 +128,14 @@
 				660938B816F9D5F300D8CF6A /* AppDelegate.h */,
 				660938B916F9D5F300D8CF6A /* AppDelegate.m */,
 				660938C116F9D5F300D8CF6A /* MainStoryboard.storyboard */,
-				660938C416F9D5F300D8CF6A /* ViewController.h */,
-				660938C516F9D5F300D8CF6A /* ViewController.m */,
 				66C4CCEE16FE097900788221 /* PlayLists_TVC.h */,
 				66C4CCEF16FE097900788221 /* PlayLists_TVC.m */,
 				660938CC16F9D8AB00D8CF6A /* List_TVC.h */,
 				660938CD16F9D8AB00D8CF6A /* List_TVC.m */,
 				660938CF16F9E1E700D8CF6A /* PlayVideo_VC.h */,
 				660938D016F9E1E700D8CF6A /* PlayVideo_VC.m */,
+				660938C416F9D5F300D8CF6A /* ViewController.h */,
+				660938C516F9D5F300D8CF6A /* ViewController.m */,
 				660938B016F9D5F300D8CF6A /* Supporting Files */,
 			);
 			path = YouPlayList;

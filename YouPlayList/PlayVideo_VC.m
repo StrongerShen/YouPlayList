@@ -34,6 +34,10 @@
     NSString* html = [NSString stringWithFormat:embedHTML, url, frame.size.width, frame.size.height];
     if(videoView == nil) {
         videoView = [[UIWebView alloc] initWithFrame:frame];
+        // 這兩句是可以給 html5 <video src="MyVideo.mp4" autoplay></video> 的 autoplay 用的
+        videoView.allowsInlineMediaPlayback = YES;
+        videoView.mediaPlaybackRequiresUserAction = NO;
+        
         [self.view addSubview:videoView];
     }
     [videoView loadHTMLString:html baseURL:nil];
@@ -55,7 +59,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    [self embedYouTube:self.href frame:CGRectMake(20, 20, 280, 280)];
+    [self embedYouTube:self.href frame:CGRectMake(0, 64, 320, 240)];
 
 }
 

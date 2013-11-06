@@ -15,20 +15,17 @@
 
 @implementation PlayLists_TVC
 
--(NSMutableArray *)getPlayListsByID
+- (NSMutableArray *)getPlaylistsByID:(NSString *)userID
+
 {
-    NSString *userID = @"binmusictaipei";
-//    NSString *userID = @"warnertaiwan";
-    
-    NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:0];
+    NSMutableArray *rows = [[NSMutableArray alloc] initWithCapacity:0];
     
     NSString *urlList = [NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/users/%@/playlists?v=2&alt=json", userID ];
     
     NSURL *url = [NSURL URLWithString:urlList];
     NSData *data = [NSData dataWithContentsOfURL:url];
     
-    NSError *jsonError = nil;
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
     
     NSDictionary *jsonDictionary = (NSDictionary *)jsonObject;
     
@@ -38,14 +35,48 @@
     for (NSDictionary *dict in entry) {
         NSString *playlistId = [[dict objectForKey:@"yt$playlistId"] objectForKey:@"$t"];
         NSString *title = [[dict objectForKey:@"title"] objectForKey:@"$t"];
+        NSString *href = [[[dict objectForKey:@"link"] objectAtIndex:1] objectForKey:@"href"];
         
-        [items addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+        [rows addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                           playlistId, @"playList_id",
                           title, @"playList_name",
+                          href, @"href",
                           nil]];
     }
+
+    // NSURLConnection sendAsynchronousRequest:request Block 的方式
+    /*
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
-    return items;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        if ([data length]>0 && connectionError==nil) {
+            //有收到正確的資料，連線沒有錯誤
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            
+            NSMutableArray *entry = [[jsonDictionary objectForKey:@"feed"] objectForKey:@"entry"];
+            
+            for (NSDictionary *dict in entry) {
+                NSString *playlistId = [[dict objectForKey:@"yt$playlistId"] objectForKey:@"$t"];
+                NSString *title = [[dict objectForKey:@"title"] objectForKey:@"$t"];
+                NSString *href = [[[dict objectForKey:@"link"] objectAtIndex:1] objectForKey:@"href"];
+                
+                [items addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  playlistId, @"playList_id",
+                                  title, @"playList_name",
+                                  href, @"href",
+                                  nil]];
+            }
+        } else if ([data length]==0 && connectionError==nil) {
+            //沒有資料，連線沒有錯誤
+        } else if (connectionError != nil) {
+            //連線有誤
+        }
+    }];
+     */
+
+    return rows;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -67,7 +98,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.title = @"相信音樂官方頻道播放清單";
+    self.title = @"頻道播放清單";
     
     // 可以從這裡取得 userid 的 playlist
     //http://gdata.youtube.com/feeds/api/users/binmusictaipei/playlists?v=2&alt=json
@@ -96,7 +127,12 @@
                  nil];
      */
     
-    playLists = [self getPlayListsByID];
+    playLists = [self getPlaylistsByID:@"binmusictaipei"];
+    
+//    NSString *userID = @"ytbmmkan";
+//    NSString *userID = @"binmusictaipei";
+//    NSString *userID = @"warnertaiwan";
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -182,6 +218,13 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
+
+-(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString:[[playLists objectAtIndex:indexPath.row] objectForKey:@"href"]]];
+}
+
+#pragma mark - Navigation
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

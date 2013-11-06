@@ -20,6 +20,24 @@ NSString *kSettingKey = @"autoloadplaylist";
 @synthesize listDict;
 
 
+#pragma mark - Added methods
+
+- (NSMutableArray *)getListsByPlayListID:(NSString *)playListID
+{
+    //從 YouTube 取得 playListID 播放清單的曲目
+    NSString *listURL = [NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/playlists/%@?v=2&alt=json", playListID];
+    
+    NSURL *url = [NSURL URLWithString:listURL];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    
+    NSMutableArray *rows = [[jsonDictionary objectForKey:@"feed"] objectForKey:@"entry"];
+    
+    return rows;
+}
+
+
 - (BOOL)getSettingPref {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSData *testValue = [defaults dataForKey:kSettingKey]; // setting exists?
@@ -53,7 +71,7 @@ NSString *kSettingKey = @"autoloadplaylist";
 	return [defaults boolForKey:kSettingKey];
 }
 
-
+#pragma mark - View
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -73,6 +91,7 @@ NSString *kSettingKey = @"autoloadplaylist";
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
     list = [[NSDictionary alloc] initWithDictionary:listDict];
     
 //    NSLog(@"list:%@,\n-----\nlistDict:%@", list, listDict);
@@ -174,6 +193,7 @@ NSString *kSettingKey = @"autoloadplaylist";
 - (IBAction)btnRefresh:(id)sender {
     BOOL reachable = [[Reachability reachabilityForInternetConnection] isReachable];
     if (reachable) {
+        /*
         NSString *urlList = [NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/playlists/%@?v=2&alt=json", [list objectForKey:@"playList_id"] ];
         
         NSURL *url = [NSURL URLWithString:urlList];
@@ -181,29 +201,15 @@ NSString *kSettingKey = @"autoloadplaylist";
         
         NSError *jsonError = nil;
         id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
-        /*
-         if ([jsonObject isKindOfClass:[NSArray class]]) {
-         NSLog(@"NSArray!");
-         NSArray *jsonArray = (NSArray *)jsonObject;
-         NSLog(@"jsonArray - %@",jsonArray);
-         
-         //        lists = [[NSMutableArray alloc] initWithArray:jsonArray];
-         }
-         else {
-         NSLog(@"NSDictionary!");
-         NSDictionary *jsonDictionary = (NSDictionary *)jsonObject;
-         NSLog(@"jsonDictionary - %@",jsonDictionary);
-         
-         lists = [[NSMutableArray alloc] initWithArray:
-         [[jsonDictionary valueForKeyPath:@"feed"] valueForKeyPath:@"entry"]
-         ];
-         }
-         */
         
         NSDictionary *jsonDictionary = (NSDictionary *)jsonObject;
         lists = [[NSMutableArray alloc] initWithArray:
                  [[jsonDictionary valueForKeyPath:@"feed"] valueForKeyPath:@"entry"]
                  ];
+        */
+        
+        
+        lists = [self getListsByPlayListID:[list objectForKey:@"playList_id"]];
         
         [self.tableView reloadData];
     }
@@ -212,8 +218,9 @@ NSString *kSettingKey = @"autoloadplaylist";
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    PlayVideo_VC *vc = segue.destinationViewController;
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+
+    PlayVideo_VC *vc = segue.destinationViewController;
     vc.href = [[[lists objectAtIndex:indexPath.row] objectForKey:@"content"] objectForKey:@"src"];
 }
 
